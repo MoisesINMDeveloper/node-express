@@ -9,7 +9,7 @@ const {
 } = require('./middlewares/error.handler');
 
 const app = express();
-const port = process.env.PORT || 3000; // Configuración del puerto
+const port = process.env.PORT || 3000; 
 
 app.use(express.json());
 
