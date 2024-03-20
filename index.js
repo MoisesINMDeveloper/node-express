@@ -9,7 +9,7 @@ const {
 } = require('./middlewares/error.handler');
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000; // Configuración del puerto
 
 app.use(express.json());
 
@@ -27,7 +27,7 @@ app.use(logErrors);
 app.use(boomErrorHandler);
 app.use(errorHandler);
 
-const whitelist = ['http://localhost:8080', 'https://myapp.com'];
+const whitelist = ['http://localhost:3000/', 'https://myapp.com'];
 const options = {
   origin: (origin, callback) => {
     if (whitelist.includes(origin)) {
@@ -41,5 +41,6 @@ const options = {
 app.use(cors(options));
 
 app.listen(port, () => {
-  console.log('Mi port' + port);
+  // eslint-disable-next-line no-console
+  console.log('Mi puerto: ' + port); // Mostrar el puerto en la consola al iniciar el servidor
 });
