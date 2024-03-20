@@ -17,7 +17,7 @@ app.get('/', (req, res) => {
   res.send('Hola mi server en express');
 });
 
-app.get('/nueva-ruta', (req, res) => {
+app.get('/products', (req, res) => {
   res.send('Hola, soy una nueva ruta');
 });
 
@@ -27,7 +27,7 @@ app.use(logErrors);
 app.use(boomErrorHandler);
 app.use(errorHandler);
 
-const whitelist = ['http://localhost:3000/', 'https://myapp.com'];
+const whitelist = ['http://localhost:3000', 'https://myapp.com'];
 const options = {
   origin: (origin, callback) => {
     if (whitelist.includes(origin)) {
