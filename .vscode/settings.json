@@ -1,0 +1,7 @@
+{
+  "editor.fontFamily": "Fira Code",
+  "editor.bracketPairColorization.independentColorPoolPerBracketType": true,
+  "editor.defaultColorDecorators": false,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.foldingImportsByDefault": true
+}
