@@ -1,5 +1,6 @@
 const express = require('express');
 
+<<<<<<< HEAD
 const CategoryService = require('./../services/category.service');
 const validatorHandler = require('./../middlewares/validator.handler');
 const { createCategorySchema, updateCategorySchema, getCategorySchema } = require('./../schemas/category.schema');
@@ -69,5 +70,17 @@ router.delete('/:id',
     }
   }
 );
+=======
+const router = express.Router();
+
+router.get('/:categoryId/products/:productId', (req, res) => {
+  const { categoryId, productId } = req.params;
+  res.json({
+    categoryId,
+    productId,
+  });
+})
+
+>>>>>>> ebed3db7d7802dfb851b3f5c9c12d6ca12567074
 
 module.exports = router;

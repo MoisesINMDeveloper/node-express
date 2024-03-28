@@ -1,5 +1,6 @@
 const express = require('express');
 
+<<<<<<< HEAD
 const UserService = require('./../services/user.service');
 const validatorHandler = require('./../middlewares/validator.handler');
 const { updateUserSchema, createUserSchema, getUserSchema } = require('./../schemas/user.schema');
@@ -72,3 +73,21 @@ router.delete('/:id',
 
 module.exports = router;
 
+=======
+const router = express.Router();
+
+router.get('/', (req, res) => {
+  const { limit, offset } = req.query;
+  if (limit && offset) {
+    res.json({
+      limit,
+      offset
+    });
+  } else {
+    res.send('No hay parametros');
+  }
+});
+
+
+module.exports = router;
+>>>>>>> ebed3db7d7802dfb851b3f5c9c12d6ca12567074
