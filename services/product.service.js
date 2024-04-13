@@ -1,55 +1,73 @@
+const faker = require('faker');
 const boom = require('@hapi/boom');
-const sequelize = require('../libs/sequelize');
+
+const { models } = require('../libs/sequelize');
 
 class ProductsService {
-  constructor() {
+
+  constructor(){
     this.products = [];
+    this.generate();
+  }
+
+  generate() {
+    const limit = 100;
+    for (let index = 0; index < limit; index++) {
+      this.products.push({
+        id: faker.datatype.uuid(),
+        name: faker.commerce.productName(),
+        price: parseInt(faker.commerce.price(), 10),
+        image: faker.image.imageUrl(),
+        isBlock: faker.datatype.boolean(),
+      });
+    }
   }
 
   async create(data) {
-    const { name, price, image } = data;
-    const isBlock = false; // Aquí puedes establecer el valor que quieras para isBlock
-    const query =
-      'INSERT INTO public.products (NAME, PRICE, IMAGE, ISBLOCK) VALUES ($1, $2, $3, $4) RETURNING *';
-    const values = [name, price, image, isBlock];
-    const { rows } = await this.pool.query(query, values);
-    return rows[0];
+    const newProduct = await models.Product.create(data);
+    return newProduct;
   }
 
   async find() {
-    const query = 'SELECT * FROM public.products';
-    const [data] = await sequelize.query(query);
-    return data;
+    const products = await models.Product.findAll({
+      include: ['category']
+    });
+    return products;
   }
 
   async findOne(id) {
-    const query = 'SELECT * FROM public.products WHERE ID = $1';
-    const { rows } = await this.pool.query(query, [id]);
-    if (rows.length === 0) {
-      throw boom.notFound('Product not found');
+    const product = this.products.find(item => item.id === id);
+    if (!product) {
+      throw boom.notFound('product not found');
     }
-    return rows[0];
+    if (product.isBlock) {
+      throw boom.conflict('product is block');
+    }
+    return product;
   }
 
   async update(id, changes) {
-    const keys = Object.keys(changes);
-    const values = Object.values(changes);
-    const setQuery = keys.map((key, i) => `${key} = $${i + 2}`).join(', ');
-    const query = `UPDATE public.products SET ${setQuery} WHERE ID = $1 RETURNING *`;
-    const { rows } = await this.pool.query(query, [id, ...values]);
-    if (rows.length === 0) {
-      throw boom.notFound('Product not found');
+    const index = this.products.findIndex(item => item.id === id);
+    if (index === -1) {
+      throw boom.notFound('product not found');
     }
-    return rows[0];
+    const product = this.products[index];
+    this.products[index] = {
+      ...product,
+      ...changes
+    };
+    return this.products[index];
   }
 
   async delete(id) {
-    const query = 'DELETE FROM public.products WHERE ID = $1 RETURNING *';
-    const { rows } = await this.pool.query(query, [id]);
-    if (rows.length === 0) {
-      throw boom.notFound('Product not found');
+    const index = this.products.findIndex(item => item.id === id);
+    if (index === -1) {
+      throw boom.notFound('product not found');
     }
-    return rows[0];
+    this.products.splice(index, 1);
+    return { id };
   }
+
+}
 
 module.exports = ProductsService;

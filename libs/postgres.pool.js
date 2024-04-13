@@ -9,4 +9,3 @@ const URI = `postgres://${USER}:${PASSWORD}@${config.dbHost}:${config.dbPort}/${
 const pool = new Pool({ connectionString: URI });
 
 module.exports = pool;
- 
